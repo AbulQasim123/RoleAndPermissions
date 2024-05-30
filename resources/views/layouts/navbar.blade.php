@@ -14,6 +14,9 @@
                     <a class="nav-link active" aria-current="page" href="{{ route('permission.index') }}">Manage Permission</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('assign.permission.role') }}">Assing-Permission-Role</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" id="logout-user" href="{{ route('auth.logout') }}">Logout</a>
                 </li>
         </div>

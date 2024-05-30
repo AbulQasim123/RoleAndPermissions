@@ -152,7 +152,7 @@
                 });
             });
 
-            // Edit Employee
+            // Edit Role
             $('.role_edit_btn').click(function(e) {
                 e.preventDefault();
                 $('#updateRoleModal').modal('show');
@@ -163,7 +163,7 @@
             });
 
 
-            // Update Employee
+            // Update Role
             $('#updateRoleForm').submit(function(e) {
                 e.preventDefault();
                 let action_url = "{{ route('update.role') }}";
@@ -216,7 +216,7 @@
                 $('#deleteRoleModal').modal('show');
             });
 
-            // Delete Employee
+            // Delete Role
             $('#deleteRoleForm').submit(function(e) {
                 e.preventDefault();
                 let action_url = "{{ route('delete.role') }}";

@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreatePermissionRequest;
-use App\Http\Requests\UpdatePermissionRequest;
-use App\Models\Permission;
 use Exception;
+use App\Models\{
+    Role,
+    Permission,
+    PermissionRole,
+};
+use App\Http\Requests\{
+    PermissionRoleRequest,
+    CreatePermissionRequest,
+    UpdatePermissionRequest,
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -61,6 +68,62 @@ class PermissionController extends Controller
             } catch (Exception $e) {
                 return Response::error($e->getMessage());
             }
+        }
+    }
+
+    public function assignPermissionRole(Request $request)
+    {
+        $roles = Role::whereNotIn('name', ['Super Admin'])->get();
+        $permissions = Permission::get(['id', 'name']);
+        // return $permissionWithRoles = Permission::with('roles')->whereHas('roles')->get();
+
+        $permissionWithRoles = Permission::with(['roles' => function ($query) {
+            $query->select('roles.id', 'roles.name');
+        }])->whereHas('roles')->get(['permissions.id', 'permissions.name']);
+        return view('assign-permission-role.assign-permission-role', compact('roles', 'permissions', 'permissionWithRoles'));
+    }
+    public function createPermissionRole(PermissionRoleRequest $request, Role $role, Permission $permission)
+    {
+        if ($request->ajax()) {
+            try {
+                $isExistPermissionToRole = PermissionRole::where([
+                    'role_id' => $request->roles,
+                    'permission_id' => $request->permissions
+                ])->first();
+                if ($isExistPermissionToRole) {
+                    return Response::error('Permission is Already Assigned to Selected Role');
+                } else {
+                    PermissionRole::create([
+                        'role_id' => $request->roles,
+                        'permission_id' => $request->permissions
+                    ]);
+                    return Response::success('Permission Created Successfully');
+                }
+            } catch (Exception $e) {
+                return Response::error($e->getMessage());
+            }
+        }
+    }
+
+    public function fetchPermissionRole(){
+        try {
+            //code...
+        } catch (Exception $e) {
+            return Response::error($e->getMessage());
+        }
+    }
+    public function updatePermissionRole(){
+        try {
+            //code...
+        } catch (Exception $e) {
+            return Response::error($e->getMessage());
+        }
+    }
+    public function deletePermissionRole(){
+        try {
+            //code...
+        } catch (Exception $e) {
+            return Response::error($e->getMessage());
         }
     }
 }
