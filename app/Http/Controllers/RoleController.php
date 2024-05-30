@@ -32,14 +32,7 @@ class RoleController extends Controller
             return Response::error('Invalid Request');
         }
     }
-    // public function fetchRole(Request $request)
-    // {
-    //     try {
-    //         return Response::success('Success');
-    //     } catch (Exception $e) {
-    //         return Response::error($e->getMessage());
-    //     }
-    // }
+
     public function updateRole(UpdateRoleRequest $request, Role $role)
     {
         if ($request->ajax()) {
@@ -55,6 +48,7 @@ class RoleController extends Controller
             }
         }
     }
+
     public function deleteRole(Request $request, Role $role)
     {
         if ($request->ajax()) {

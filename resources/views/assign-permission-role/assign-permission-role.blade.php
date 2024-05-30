@@ -85,7 +85,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="update_permissions" class="form-label">Permissions</label>
-                            <select name="update_permissions" class="form-control" id="update_permissions">
+                            <select name="update_permissions" class="form-control" id="update_permissions" style="pointer-events: none">
                                 @foreach ($permissions as $permission)
                                     <option value="{{ $permission->id }}">{{ $permission->name }}</option>
                                 @endforeach
@@ -97,7 +97,7 @@
                             <div class="multi-select-dropdown">
                                 <div class="select-box">
                                     <input type="text" id="selected-options-name" placeholder="Select Options" readonly>
-                                    <input type="hidden" id="selected-options">
+                                    <input type="hidden" id="selected-options" name="roles">
                                     <div class="arrow">&#9660;</div>
                                     <div class="options-container" id="options-container">
                                         @foreach ($roles as $role)
@@ -116,7 +116,7 @@
                         <button type="button" class="btn btn-outline-danger btn-sm"
                             data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary btn-sm"
-                            id="updateAssignPermissionRoleBtn">Assign</button>
+                            id="updateAssignPermissionRoleBtn">Update</button>
                     </div>
                 </form>
             </div>
@@ -124,7 +124,7 @@
     </div>
 
     <!-- Delete Modal -->
-    {{-- <div class="modal fade" id="deletePermissionRoleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="deletePermissionRoleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -146,7 +146,7 @@
                 </form>
             </div>
         </div>
-    </div> --}}
+    </div>
 @endsection
 
 @push('scripts')
@@ -195,14 +195,32 @@
                 });
             });
 
+            // Edit Permission & Role
+            $('.permission_role_edit_btn').click(function(e) {
+                $('#options-container input').prop('checked', false);
+                let permissionId = $(this).data('permissions');
+                $('#update_permissions').val(permissionId);
+                let roles = $(this).data('roles');
+
+                if (roles.length > 0) {
+                    for (let x = 0; x < roles.length; x++) {
+                        $("#options-container input[value='" + roles[x]['id'] + "']").prop('checked', true);
+                    }
+                }
+                updateSelectedOptions();
+            });
 
             // Update Permission Role
             $('#updatePermissionRoleForm').submit(function(e) {
                 e.preventDefault();
                 let action_url = "{{ route('update.permission.role') }}";
                 let formData = new FormData(this);
-                $('#updateRoleForm input').on(
-                    'input',
+                if($('#selected-options').val() == ''){
+                    alert("Pleasae Select atleast One Role");
+                    return false;
+                }
+                $('#updatePermissionRoleForm input, #updatePermissionRoleForm select').on(
+                    'input change',
                     function() {
                         let fieldName = $(this).attr('name');
                         clearFieldError(fieldName);
@@ -214,14 +232,14 @@
                     processData: false,
                     contentType: false,
                     beforeSend: function() {
-                        $('#updateRoleBtn').attr('disabled', true);
-                        $('#updateRoleBtn').html(
+                        $('#updateAssignPermissionRoleBtn').attr('disabled', true);
+                        $('#updateAssignPermissionRoleBtn').html(
                             '<i class="fa fa-spinner fa-spin"></i> Processing...');
                     },
                     success: function(response) {
                         if (response.status == true) {
-                            $("#updateRoleModal").modal("hide");
-                            $("#updateRoleForm")[0].reset();
+                            $("#updatePermissionRoleModal").modal("hide");
+                            $("#updatePermissionRoleForm")[0].reset();
                             location.reload();
                         } else {
                             alert(response.data);
@@ -234,23 +252,20 @@
                         });
                     },
                     complete: function() {
-                        $('#updateRoleBtn').attr('disabled', false);
-                        $('#updateRoleBtn').html('Update');
+                        $('#updateAssignPermissionRoleBtn').attr('disabled', false);
+                        $('#updateAssignPermissionRoleBtn').html('Update');
                     }
                 });
             });
 
-            $('.role_delete_btn').click(function(e) {
+            $('.permission_role_delete_btn').click(function(e) {
                 e.preventDefault();
-                let id = $(this).data('id');
-                let name = $(this).data('name');
-                $('#delete_role_name').text(name);
-                $('#delete_role_id').val(id);
-                $('#deleteRoleModal').modal('show');
+                let id = $(this).data('permissions');
+                $('#delete_permission_role_id').val(id);
             });
 
             // Delete Role
-            $('#deleteRoleForm').submit(function(e) {
+            $('#deletePermissionRoleForm').submit(function(e) {
                 e.preventDefault();
                 let action_url = "{{ route('delete.permission.role') }}";
                 let formData = new FormData(this);
@@ -261,22 +276,22 @@
                     processData: false,
                     contentType: false,
                     beforeSend: function() {
-                        $('#deleteRoleBtn').attr('disabled', true);
-                        $('#deleteRoleBtn').html(
+                        $('#deletePermissionRoleBtn').attr('disabled', true);
+                        $('#deletePermissionRoleBtn').html(
                             '<i class="fa fa-spinner fa-spin"></i> Processing...');
                     },
                     success: function(response) {
                         if (response.status == true) {
-                            $("#deleteRoleModal").modal("hide");
-                            $("#deleteRoleForm")[0].reset();
+                            $("#deletePermissionRoleModal").modal("hide");
+                            $("#deletePermissionRoleForm")[0].reset();
                             location.reload();
                         } else {
                             alert(response.data);
                         }
                     },
                     complete: function() {
-                        $('#deleteRoleBtn').attr('disabled', false);
-                        $('#deleteRoleBtn').html('Add');
+                        $('#deletePermissionRoleBtn').attr('disabled', false);
+                        $('#deletePermissionRoleBtn').html('Add');
                     }
                 });
             })
@@ -310,19 +325,6 @@
                 updateSelectedOptions();
             });
 
-            $('.permission_role_edit_btn').click(function(e) {
-                $('#options-container input').prop('checked', false);
-                let permissionId = $(this).data('permissions');
-                $('#update_permissions').val(permissionId);
-                let roles = $(this).data('roles');
-
-                if (roles.length > 0) {
-                    for (let x = 0; x < roles.length; x++) {
-                        $("#options-container input[value='" + roles[x]['id'] + "']").prop('checked', true);
-                    }
-                }
-                updateSelectedOptions();
-            });
 
         });
 

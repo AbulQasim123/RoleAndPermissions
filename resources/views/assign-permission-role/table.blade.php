@@ -15,13 +15,13 @@
             @endforeach
         </td>
         <td>
-            <button type="button" data-bs-toggle="modal"
-            data-bs-target="#updatePermissionRoleModal" class="btn btn-outline-primary btn-sm permission_role_edit_btn"
-                data-permissions="{{ $permission->id }}" data-roles="{{ $permission->roles }}">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#updatePermissionRoleModal"
+                class="btn btn-outline-primary btn-sm permission_role_edit_btn" data-permissions="{{ $permission->id }}"
+                data-roles="{{ $permission->roles }}">
                 <span class="bi bi-pencil-square"></span>
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm permission_role_delete_btn"
-                data-id="{{ $permission->id }}">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#deletePermissionRoleModal"
+                class="btn btn-outline-danger btn-sm permission_role_delete_btn" data-permissions="{{ $permission->id }}">
                 <span class="bi bi-trash-fill"></span>
             </button>
         </td>

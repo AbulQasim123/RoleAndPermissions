@@ -36,14 +36,7 @@ class PermissionController extends Controller
             }
         }
     }
-    // public function fetchPermission(Request $request)
-    // {
-    //     try {
-    //         return Response::success('permission Created Successfully');
-    //     } catch (Exception $e) {
-    //         return Response::error($e->getMessage());
-    //     }
-    // }
+
     public function updatePermission(UpdatePermissionRequest $request, Permission $permission)
     {
         if ($request->ajax()) {
@@ -105,25 +98,36 @@ class PermissionController extends Controller
         }
     }
 
-    public function fetchPermissionRole(){
-        try {
-            //code...
-        } catch (Exception $e) {
-            return Response::error($e->getMessage());
+    public function updatePermissionRole(Request $request, Role $role, Permission $permission)
+    {
+        if ($request->ajax()) {
+            try {
+                $roles = explode(', ', $request->roles);
+                PermissionRole::where('permission_id', $request->update_permissions)->delete();
+                $insertData = [];
+                foreach ($roles as $role) {
+                    $insertData[] = [
+                        'permission_id' => $request->update_permissions,
+                        'role_id' => $role
+                    ];
+                }
+
+                PermissionRole::insert($insertData);
+                return Response::success('Permission Created Successfully');
+            } catch (Exception $e) {
+                return Response::error($e->getMessage());
+            }
         }
     }
-    public function updatePermissionRole(){
-        try {
-            //code...
-        } catch (Exception $e) {
-            return Response::error($e->getMessage());
-        }
-    }
-    public function deletePermissionRole(){
-        try {
-            //code...
-        } catch (Exception $e) {
-            return Response::error($e->getMessage());
+    public function deletePermissionRole(Request $request)
+    {
+        if ($request->ajax()) {
+            try {
+                PermissionRole::where('permission_id', $request->delete_permission_role_id)->delete();
+                return Response::success('Permission Deleted Successfully');
+            } catch (Exception $e) {
+                return Response::error($e->getMessage());
+            }
         }
     }
 }
