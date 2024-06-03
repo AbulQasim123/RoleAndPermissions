@@ -19,7 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @include('assign-permission-role.table', [
+                    @include('assign-permission-role.role-table', [
                         'roles' => $roles,
                         'permissions' => $permissions,
                     ])
@@ -154,7 +154,7 @@
         $(document).ready(function() {
             $('#permissionRoleForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('create.permission.role') }}";
+                let action_url = "{{ route('create-permission-role') }}";
                 let formData = new FormData(this);
                 $('#permissionRoleForm input, #permissionRoleForm select').on(
                     'input change',
@@ -213,7 +213,7 @@
             // Update Permission Role
             $('#updatePermissionRoleForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('update.permission.role') }}";
+                let action_url = "{{ route('update-permission-role') }}";
                 let formData = new FormData(this);
                 if($('#selected-options').val() == ''){
                     alert("Pleasae Select atleast One Role");
@@ -267,7 +267,7 @@
             // Delete Role
             $('#deletePermissionRoleForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('delete.permission.role') }}";
+                let action_url = "{{ route('delete-permission-role') }}";
                 let formData = new FormData(this);
                 $.ajax({
                     type: "POST",

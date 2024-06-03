@@ -8,13 +8,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('role.index') }}">Manage Role</a>
+                    <a class="nav-link active" aria-current="page" href="{{ route('manage-role') }}">Manage Role</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('permission.index') }}">Manage Permission</a>
+                    <a class="nav-link active" aria-current="page" href="{{ route('manage-permission') }}">Manage
+                        Permission</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('assign.permission.role') }}">Assing-Permission-Role</a>
+                    <a class="nav-link active" aria-current="page"
+                        href="{{ route('assign-permission-role') }}">Assing-Permission-Role</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page"
+                        href="{{ route('assign-permission-route') }}">Assing-Permission-Route</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="logout-user" href="{{ route('auth.logout') }}">Logout</a>

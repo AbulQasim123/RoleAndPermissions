@@ -111,7 +111,7 @@
         $(document).ready(function() {
             $('#createRoleForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('create.role') }}";
+                let action_url = "{{ route('create-role') }}";
                 let formData = new FormData(this);
                 $('#createRoleForm input').on(
                     'input',
@@ -166,7 +166,7 @@
             // Update Role
             $('#updateRoleForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('update.role') }}";
+                let action_url = "{{ route('update-role') }}";
                 let formData = new FormData(this);
                 $('#updateRoleForm input').on(
                     'input',
@@ -219,7 +219,7 @@
             // Delete Role
             $('#deleteRoleForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('delete.role') }}";
+                let action_url = "{{ route('delete-role') }}";
                 let formData = new FormData(this);
                 $.ajax({
                     type: "POST",

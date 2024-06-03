@@ -113,7 +113,7 @@
         $(document).ready(function() {
             $('#createPermissionForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('create.permission') }}";
+                let action_url = "{{ route('create-permission') }}";
                 let formData = new FormData(this);
                 $('#createPermissionForm input').on(
                     'input',
@@ -168,7 +168,7 @@
             // Update Employee
             $('#updatePermissionForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('update.permission') }}";
+                let action_url = "{{ route('update-permission') }}";
                 let formData = new FormData(this);
                 $('#updatePermissionForm input').on(
                     'input',
@@ -221,7 +221,7 @@
             // Delete Employee
             $('#deletePermissionForm').submit(function(e) {
                 e.preventDefault();
-                let action_url = "{{ route('delete.permission') }}";
+                let action_url = "{{ route('delete-permission') }}";
                 let formData = new FormData(this);
                 $.ajax({
                     type: "POST",
