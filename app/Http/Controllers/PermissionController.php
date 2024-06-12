@@ -14,6 +14,7 @@ use App\Http\Requests\{
     CreatePermissionRequest,
     UpdatePermissionRequest,
     PermissionRouterRequest,
+    UpdatePermissionRouterRequest,
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -162,6 +163,7 @@ class PermissionController extends Controller
         return view('assign-permission-role.assign-permission-route', compact('routeDetails', 'permissions', 'permissionRoutes'));
     }
 
+    // Create Permission Routes
     public function createPermissionRoute(PermissionRouterRequest $request)
     {
         if ($request->ajax()) {
@@ -179,6 +181,60 @@ class PermissionController extends Controller
                     ]);
                     return Response::success('Permission Created Successfully to this Route');
                 }
+            } catch (Exception $e) {
+                return Response::error($e->getMessage());
+            }
+        }
+    }
+
+    //  Update Permission Routes
+    public function updatePermissionRoute(UpdatePermissionRouterRequest $request)
+    {
+        if ($request->ajax()) {
+            // dd($request->update_id);
+            try {
+                $isExistPermission = PermissionRouter::whereNotIn('id', [$request->update_id])
+                    ->where([
+                        'permission_id' => $request->update_permissions_id,
+                    ])->first();
+
+                $isExistRouter = PermissionRouter::whereNotIn('id', [$request->update_id])
+                    ->where([
+                        'router' => $request->update_routes,
+                    ])->first();
+
+                if ($isExistPermission) {
+                    return Response::error('Permission is Already Assigned.');
+                } else if ($isExistRouter) {
+                    return Response::error('Router is Already Assigned.');
+                }
+
+                PermissionRouter::where('id', $request->update_id)->update([
+                    'permission_id' => $request->update_permissions_id,
+                    'router' => $request->update_routes,
+                ]);
+                return Response::success('Permission is updated to selected Route');
+            } catch (Exception $e) {
+                return Response::error($e->getMessage());
+            }
+        }
+    }
+
+    // Delete Permission Routes
+    public function deletePermissionRoute(Request $request)
+    {
+        if ($request->ajax()) {
+            try {
+                $request->validate([
+                    'delete_router_id' => 'required',
+                ]);
+                PermissionRouter::where('id', $request->delete_router_id)->delete();
+                $remainingRecords = PermissionRouter::count();
+                // If no records remain, truncate the table
+                if ($remainingRecords === 0) {
+                    PermissionRouter::truncate();
+                }
+                return Response::success('Permission is Deleted of Routes');
             } catch (Exception $e) {
                 return Response::error($e->getMessage());
             }

@@ -1,7 +1,7 @@
 @php
     $x = 1;
 @endphp
-@foreach ($permissions as $permission)
+@forelse ($permissions as $permission)
     <tr>
         <td>
             {{ $x++ }}
@@ -10,12 +10,17 @@
             {{ $permission->name }}
         </td>
         <td>
-            <button type="button" class="btn btn-outline-primary btn-sm permission_edit_btn" data-name="{{ $permission->name }}"
-                data-id="{{ $permission->id }}">
+            <button type="button" class="btn btn-outline-primary btn-sm permission_edit_btn"
+                data-name="{{ $permission->name }}" data-id="{{ $permission->id }}">
                 <span class="bi bi-pencil-square"></span>
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm permission_delete_btn" data-name="{{ $permission->name }}"
-                data-id="{{ $permission->id }}"><span class="bi bi-trash-fill"></span></button>
+            <button type="button" class="btn btn-outline-danger btn-sm permission_delete_btn"
+                data-name="{{ $permission->name }}" data-id="{{ $permission->id }}"><span
+                    class="bi bi-trash-fill"></span></button>
         </td>
     </tr>
-@endforeach
+@empty
+    <tr>
+        <td colspan="4" class="text-center">No data found</td>
+    </tr>
+@endforelse

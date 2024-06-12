@@ -1,7 +1,7 @@
 @php
     $x = 1;
 @endphp
-@foreach ($permissionWithRoles as $permission)
+@forelse ($permissionWithRoles as $permission)
     <tr>
         <td>
             {{ $x++ }}
@@ -21,9 +21,14 @@
                 <span class="bi bi-pencil-square"></span>
             </button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#deletePermissionRoleModal"
-                class="btn btn-outline-danger btn-sm permission_role_delete_btn" data-permissions="{{ $permission->id }}">
+                class="btn btn-outline-danger btn-sm permission_role_delete_btn"
+                data-permissions="{{ $permission->id }}">
                 <span class="bi bi-trash-fill"></span>
             </button>
         </td>
     </tr>
-@endforeach
+@empty
+    <tr>
+        <td colspan="4" class="text-center">No data found</td>
+    </tr>
+@endforelse

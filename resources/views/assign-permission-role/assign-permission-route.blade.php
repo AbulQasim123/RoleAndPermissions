@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <!-- Add Modal -->
+    <!-- Add Modal Route-->
     <div class="modal fade" id="permissionRouteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <!-- Update Modal -->
+    <!-- Update Modal Route-->
     <div class="modal fade" id="updatePermissionRouteModal" data-bs-backdrop="static" data-bs-keyboard="false"
         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -83,6 +83,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
+                            <input type="hidden" name="update_id" id="update_id">
                             <label for="update_permissions_id" class="form-label">Permissions</label>
                             <select name="update_permissions_id" class="form-control" id="update_permissions_id">
                                 <option value="" selected disabled>Select Permissions</option>
@@ -104,7 +105,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                            data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-outline-primary btn-sm"
                             id="updatePermissionRouteBtn">Update</button>
                     </div>
@@ -118,21 +120,21 @@
         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="deletePermissionRoleForm">
+                <form id="deletePermissionRouteForm">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Delete Permission Role</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Delete Permission Route</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure you want to delete this permissions & role?</p>
-                        <input type="hidden" name="delete_permission_role_id" id="delete_permission_role_id">
+                        <p>Are you sure you want to delete this permissions & Route?</p>
+                        <input type="hidden" name="delete_router_id" id="delete_router_id">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger btn-sm"
                             data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-outline-primary btn-sm"
-                            id="deletePermissionRoleBtn">Delete</button>
+                            id="deletePermissionRouteBtn">Delete</button>
                     </div>
                 </form>
             </div>
@@ -185,7 +187,102 @@
                     }
                 });
             });
+
+            // update route
+            $('.permission_route_edit_btn').click(function(e) {
+                e.preventDefault();
+                let route_id = $(this).data('id');
+                let permissions_id = $(this).data('permission-id');
+                let route = $(this).data('route');
+
+                $('#update_id').val(route_id);
+                $('#update_permissions_id').val(permissions_id);
+                $('#update_routes').val(route);
+            });
+
+            // Update Permission
+            $('#updatePermissionRouteForm').submit(function(e) {
+                e.preventDefault();
+                let action_url = "{{ route('update-permission-route') }}";
+                let formData = new FormData(this);
+                $('#updatePermissionRouteForm input, #updatePermissionRouteForm select').on(
+                    'input change',
+                    function() {
+                        let fieldName = $(this).attr('name');
+                        clearFieldError(fieldName);
+                    });
+                $.ajax({
+                    type: "POST",
+                    url: action_url,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function() {
+                        $('#updatePermissionRouteBtn').attr('disabled', true);
+                        $('#updatePermissionRouteBtn').html(
+                            '<i class="fa fa-spinner fa-spin"></i> Processing...');
+                    },
+                    success: function(response) {
+                        if (response.status == true) {
+                            $("#updatePermissionRouteModal").modal("hide");
+                            $("#updatePermissionRouteForm")[0].reset();
+                            location.reload();
+                        } else {
+                            alert(response.data);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(field, error) {
+                            displayValidationError(field, error[0]);
+                        });
+                    },
+                    complete: function() {
+                        $('#updatePermissionRouteBtn').attr('disabled', false);
+                        $('#updatePermissionRouteBtn').html('Update');
+                    }
+                });
+            });
+
+            $('.permission_route_delete_btn').click(function(e) {
+                e.preventDefault();
+                let route_id = $(this).data('id');
+                $('#delete_router_id').val(route_id);
+            });
+
+            // Delete Employee
+            $('#deletePermissionRouteForm').submit(function(e) {
+                e.preventDefault();
+                let action_url = "{{ route('delete-permission-route') }}";
+                let formData = new FormData(this);
+                $.ajax({
+                    type: "POST",
+                    url: action_url,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function() {
+                        $('#deletePermissionRouteBtn').attr('disabled', true);
+                        $('#deletePermissionRouteBtn').html(
+                            '<i class="fa fa-spinner fa-spin"></i> Processing...');
+                    },
+                    success: function(response) {
+                        if (response.status == true) {
+                            $("#deletePermissionRouteModal").modal("hide");
+                            $("#deletePermissionRouteForm")[0].reset();
+                            location.reload();
+                        } else {
+                            alert(response.data);
+                        }
+                    },
+                    complete: function() {
+                        $('#deletePermissionRouteBtn').attr('disabled', false);
+                        $('#deletePermissionRouteBtn').html('Add');
+                    }
+                });
+            })
         });
+
 
         $('#permissionRouteModal').on('hidden.bs.modal', function() {
             $("#permissions_id_error").html('');
@@ -193,10 +290,10 @@
             $('#permissionRouteModal')[0].reset();
         });
 
-        // $('#updatePermissionRoleModal').on('hidden.bs.modal', function() {
-        //     $("#update_permissions_error").html('');
-        //     $("#update_role_error").html('');
-        // });
+        $('#updatePermissionRouteModal').on('hidden.bs.modal', function() {
+            $("#update_permissions_id_error").html('');
+            $("#update_routes_error").html('');
+        });
         // Display Validation Error
         function displayValidationError(field, error) {
             $('#' + field + '_error').text(error);

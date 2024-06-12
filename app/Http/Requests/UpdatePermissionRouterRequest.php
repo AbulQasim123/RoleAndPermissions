@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePermissionRequest extends FormRequest
+class UpdatePermissionRouterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,16 @@ class UpdatePermissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'edit_permission' => 'required|string',
+            'update_permissions_id' =>  'required',
+            'update_routes' => 'required',
         ];
     }
-    public function messages(): array
+
+    public function messages()
     {
         return [
-            'edit_permission.required' => 'Permission name is required',
+            'update_permissions_id.required' => 'Permission is required',
+            'update_routes.required' => 'Route Name is required',
         ];
     }
 }
