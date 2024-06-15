@@ -4,6 +4,7 @@ use App\Http\Controllers\{
     AuthController,
     PermissionController,
     RoleController,
+    UserController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -45,4 +46,10 @@ Route::middleware('isAuthenticated')->group(function () {
     Route::post('/create-permission-route', [PermissionController::class, 'createPermissionRoute'])->name('create-permission-route');
     Route::post('/update-permission-route', [PermissionController::class, 'updatePermissionRoute'])->name('update-permission-route');
     Route::post('/delete-permission-route', [PermissionController::class, 'deletePermissionRoute'])->name('delete-permission-route');
+
+    // Assign users routes
+    Route::get('/manage-user', [UserController::class, 'manageUser'])->name('manage-user');
+    Route::post('/create-user', [UserController::class, 'createUser'])->name('create-user');
+    Route::post('/update-user', [UserController::class, 'updateUser'])->name('update-user');
+    Route::post('/delete-user', [UserController::class, 'deleteUser'])->name('delete-user');
 });
