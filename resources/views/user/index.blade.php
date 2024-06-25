@@ -59,7 +59,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
-                                    <input type="text" class="form-control" id="password" name="password"
+                                    <input type="password" class="form-control" id="password" name="password"
                                         placeholder="Enter Password">
                                     <span class="text-danger" id="password_error"></span>
                                 </div>
@@ -243,8 +243,8 @@
                 e.preventDefault();
                 let action_url = "{{ route('update-user') }}";
                 let formData = new FormData(this);
-                $('#updateUserForm input').on(
-                    'input',
+                $('#updateUserForm input, #updateUserForm select').on(
+                    'input change',
                     function() {
                         let fieldName = $(this).attr('name');
                         clearFieldError(fieldName);
@@ -256,8 +256,8 @@
                     processData: false,
                     contentType: false,
                     beforeSend: function() {
-                        $('#updateUserBtn').attr('disabled', true);
-                        $('#updateUserBtn').html(
+                        $('#UpdateUserBtn').attr('disabled', true);
+                        $('#UpdateUserBtn').html(
                             '<i class="fa fa-spinner fa-spin"></i> Processing...');
                     },
                     success: function(response) {
@@ -276,8 +276,8 @@
                         });
                     },
                     complete: function() {
-                        $('#updateUserBtn').attr('disabled', false);
-                        $('#updateUserBtn').html('Update');
+                        $('#UpdateUserBtn').attr('disabled', false);
+                        $('#UpdateUserBtn').html('Update');
                     }
                 });
             });
